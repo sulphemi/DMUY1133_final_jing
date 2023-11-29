@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script src="p5.min.js"></script>
+        <script>
+            if (! (window.P5_LOAD_OK ?? false)) { //check if LOAD_OK is undefined
+                console.warn("p5.js did not load properly! falling back to cdn...");
+                const element = document.createElement('script');
+                element.src = "https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js";
+                document.head.appendChild(element);
+            };
+        </script>
+        <script src="sketch.js"></script>
+    </head>
+</html>
