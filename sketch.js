@@ -27,8 +27,11 @@ let headerColor;
 let img;
 let h;
 
+let fileTree = [];
+
 function preload() {
-    img = getLoremImage();
+    createFileTree();
+    img = loadImage("mimi.png");
 }
 
 function setup() {
@@ -44,7 +47,7 @@ function draw() {
     image(img, h.pos.x, h.pos.y + h.height, img.width, img.height);
 }
 
-function getLoremImage(imgWidth, imgHeight, imgSubject) {
+function _getLoremImage(imgWidth, imgHeight, imgSubject) {
     imgWidth = imgWidth ?? Math.floor(random() * 500) + 300;
     imgHeight = imgHeight ?? Math.floor(random() * 500) + 300;
     
@@ -55,6 +58,10 @@ function getLoremImage(imgWidth, imgHeight, imgSubject) {
     } else {
         return loadImage(`https://loremflickr.com/${imgWidth}/${imgHeight}/${imgSubject}`);
     }
+}
+
+function getLoremImage() {
+    return {_:"im an image i promise"};
 }
 
 function mousePressed() {
@@ -76,5 +83,27 @@ function mouseDragged(event) {
         e = event;
         dragging.pos.x += event.movementX;
         dragging.pos.y += event.movementY;
+    }
+}
+
+function createFileTree() {
+    const imageWeight = random();
+    const folderWeight = random();
+    
+    let ct = 10;
+    while (ct --> 0) {
+        populateFiles(fileTree, imageWeight, folderWeight);
+    }
+}
+
+function populateFiles(folder, iw, fw) {
+    if (random() < iw) {
+        folder.push(getLoremImage());
+    }
+
+    if (random() < fw) {
+        const newFolder = [];
+        folder.push(newFolder);
+        populateFiles(newFolder, iw, fw);
     }
 }
