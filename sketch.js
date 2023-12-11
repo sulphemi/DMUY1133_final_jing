@@ -1,19 +1,46 @@
 class HeaderBar {
+    constructor(content) {
+        this.width = content.width;
+        this.height = 20;
+        this.pos = createVector(20, 20);
+    }
 
+    mouseHovered() {
+        return (mouseX > this.pos.x) && (mouseX < this.pos.x + this.width) && (mouseY > this.pos.y) && (mouseY < this.pos.y + this.height);
+    }
+
+    display() {
+        fill(headerColor);
+        rect(this.pos.x, this.pos.y, this.width, this.height);
+    }
 }
 
-class Wind {
-
+class FileExplorer {
+    constructor() {
+        this.width;
+        this.height;
+    }
 }
 
+let headerColor;
 let img;
-function setup() {
-    createCanvas(800, 800);
+let h;
+
+function preload() {
     img = getLoremImage();
 }
 
+function setup() {
+    createCanvas(800, 800);
+    h = new HeaderBar(img);
+    headerColor = color(0, 0, 255);
+    noStroke();
+}
+
 function draw() {
-    image(img, 0, 0, img.width, img.height);
+    background(240);
+    h.display();
+    image(img, h.pos.x, h.pos.y + h.height, img.width, img.height);
 }
 
 function getLoremImage(imgWidth, imgHeight, imgSubject) {
