@@ -22,12 +22,19 @@ class FileExplorer {
     }
 }
 
+class Folder {
+    constructor(name) {
+        this.name = name;
+        this.cont = [];
+    }
+}
+
 let dragging = null;
 let headerColor;
 let img;
 let h;
 
-let fileTree = [];
+let fileTree = new Folder("root");
 
 function preload() {
     createFileTree();
@@ -92,7 +99,7 @@ function createFileTree() {
     
     let ct = 10;
     while (ct --> 0) {
-        populateFiles(fileTree, imageWeight, folderWeight);
+        populateFiles(fileTree.cont, imageWeight, folderWeight);
     }
 }
 
@@ -102,8 +109,8 @@ function populateFiles(folder, iw, fw) {
     }
 
     if (random() < fw) {
-        const newFolder = [];
+        const newFolder = new Folder();
         folder.push(newFolder);
-        populateFiles(newFolder, iw, fw);
+        populateFiles(newFolder.cont, iw, fw);
     }
 }
