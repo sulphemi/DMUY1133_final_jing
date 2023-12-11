@@ -22,6 +22,7 @@ class FileExplorer {
     }
 }
 
+let dragging = null;
 let headerColor;
 let img;
 let h;
@@ -53,5 +54,27 @@ function getLoremImage(imgWidth, imgHeight, imgSubject) {
         return loadImage(loadURL);
     } else {
         return loadImage(`https://loremflickr.com/${imgWidth}/${imgHeight}/${imgSubject}`);
+    }
+}
+
+function mousePressed() {
+    //for (const h of headers) {
+        if (h.mouseHovered()) {
+            dragging = h;
+        } else {
+
+        }
+    //}
+}
+
+function mouseReleased() {
+    dragging = null;
+}
+
+function mouseDragged(event) {
+    if (dragging !== null) {
+        e = event;
+        dragging.pos.x += event.movementX;
+        dragging.pos.y += event.movementY;
     }
 }
