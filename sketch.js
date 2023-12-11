@@ -17,7 +17,7 @@ class HeaderBar {
     }
 
     drawContent() {
-        image(this.content, h.pos.x, h.pos.y + h.height, img.width, img.height);
+        image(this.content, h.pos.x, h.pos.y + h.height, this.content.width, this.content.height);
     }
 }
 
@@ -86,9 +86,13 @@ function getLoremImage(imgWidth, imgHeight, imgSubject) {
 }
 
 function mousePressed() {
-    for (const h of headers) {
+    for (const i in headers) {
+        const h = headers[i];
         if (h.mouseHovered()) {
+            headers.splice(i, 1);
+            headers.push(h);
             dragging = h;
+            break;
         }
     }
 }
