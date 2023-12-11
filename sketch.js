@@ -1,5 +1,6 @@
 class HeaderBar {
     constructor(content) {
+        this.content = content;
         this.width = content.width;
         this.height = 20;
         this.pos = createVector(20, 20);
@@ -12,6 +13,11 @@ class HeaderBar {
     display() {
         fill(headerColor);
         rect(this.pos.x, this.pos.y, this.width, this.height);
+        this.drawContent();
+    }
+
+    drawContent() {
+        image(this.content, h.pos.x, h.pos.y + h.height, img.width, img.height);
     }
 }
 
@@ -29,10 +35,12 @@ class Folder {
     }
 }
 
+let loadLimit = 3;
+
 let dragging = null;
 let headerColor;
 let img;
-let h;
+let headers = [];
 
 let fileTree = new Folder("root");
 
@@ -43,42 +51,46 @@ function preload() {
 
 function setup() {
     createCanvas(800, 800);
-    h = new HeaderBar(img);
+    for (f of fileTree.cont) {
+        if (typeof f.pixels !== "undefined") {
+            headers.push(new HeaderBar(f));
+        }
+    }
+    headers.push(new HeaderBar(img));
     headerColor = color(0, 0, 255);
     noStroke();
 }
 
 function draw() {
     background(240);
-    h.display();
-    image(img, h.pos.x, h.pos.y + h.height, img.width, img.height);
+    for (h of headers) {
+        h.display();
+    }
 }
 
-function _getLoremImage(imgWidth, imgHeight, imgSubject) {
+function getLoremImage(imgWidth, imgHeight, imgSubject) {
     imgWidth = imgWidth ?? Math.floor(random() * 500) + 300;
     imgHeight = imgHeight ?? Math.floor(random() * 500) + 300;
+
+    if (--loadLimit < 0) return {};
     
-    if (typeof imgSubject !== undefined) {
+    if (typeof imgSubject === "undefined") {
         let loadURL = `https://picsum.photos/${imgWidth}/${imgHeight}`;
         console.log(loadURL);
         return loadImage(loadURL);
     } else {
-        return loadImage(`https://loremflickr.com/${imgWidth}/${imgHeight}/${imgSubject}`);
+        let loadURL = `https://loremflickr.com/${imgWidth}/${imgHeight}/${imgSubject}`;
+        console.log(loadURL);
+        return loadImage(loadURL);
     }
 }
 
-function getLoremImage() {
-    return {_:"im an image i promise"};
-}
-
 function mousePressed() {
-    //for (const h of headers) {
+    for (const h of headers) {
         if (h.mouseHovered()) {
             dragging = h;
-        } else {
-
         }
-    //}
+    }
 }
 
 function mouseReleased() {
