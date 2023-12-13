@@ -10,10 +10,24 @@ class HeaderBar {
         return (mouseX > this.pos.x) && (mouseX < this.pos.x + this.width) && (mouseY > this.pos.y) && (mouseY < this.pos.y + this.height);
     }
 
+    closeHovered() {
+        return (mouseX > this.pos.x) && (mouseX < this.pos.x + 20) && (mouseY > this.pos.y) && (mouseY < this.pos.y + 20);
+    }
+
+    mouseOnContent() {
+        return (mouseX > this.pos.x) && (mouseX < this.pos.x + this.width) && (mouseY > this.pos.y) && (mouseY < this.pos.y + this.height + this.content.height);
+    }
+
     display() {
         fill(headerColor);
         rect(this.pos.x, this.pos.y, this.width, this.height);
         this.drawContent();
+        this.drawCloseButton();
+    }
+
+    drawCloseButton() {
+        fill(this.closeHovered ? color(255, 0, 0) : color(255, 50, 50));
+        square(this.pos.x, this.pos.y, 20);
     }
 
     drawContent() {
@@ -75,7 +89,8 @@ function getLoremImage(imgWidth, imgHeight, imgSubject) {
     if (--loadLimit < 0) return {};
     
     if (typeof imgSubject === "undefined") {
-        let loadURL = `https://picsum.photos/${imgWidth}/${imgHeight}`;
+        //let loadURL = `https://picsum.photos/${imgWidth}/${imgHeight}`;
+        let loadURL = `https://source.unsplash.com/random/${imgWidth}x${imgHeight}`;
         console.log(loadURL);
         return loadImage(loadURL);
     } else {
@@ -86,12 +101,22 @@ function getLoremImage(imgWidth, imgHeight, imgSubject) {
 }
 
 function mousePressed() {
-    for (const i in headers) {
+    for (let i = headers.length - 1; i >= 0; i--) {
         const h = headers[i];
+
+        if (h.closeHovered()) {
+            headers.splice(i, 1);
+            break;
+        }
+
         if (h.mouseHovered()) {
+            dragging = h;
+            break;
+        }
+
+        if (h.mouseOnContent()) {
             headers.splice(i, 1);
             headers.push(h);
-            dragging = h;
             break;
         }
     }
@@ -121,7 +146,7 @@ function createFileTree() {
 
 function populateFiles(folder, iw, fw) {
     if (random() < iw) {
-        folder.push(getLoremImage(null, null, "cat"));
+        folder.push(getLoremImage());
     }
 
     if (random() < fw) {
