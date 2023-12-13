@@ -121,7 +121,7 @@ function createFileTree() {
 
 function populateFiles(folder, iw, fw) {
     if (random() < iw) {
-        folder.push(getLoremImage());
+        folder.push(getLoremImage(null, null, "cat"));
     }
 
     if (random() < fw) {
