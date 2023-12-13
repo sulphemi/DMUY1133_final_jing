@@ -44,6 +44,7 @@ class FileExplorer {
 
 class Folder {
     constructor(name) {
+        this.type = "folder";
         this.name = name;
         this.cont = [];
     }
@@ -110,6 +111,8 @@ function mousePressed() {
         }
 
         if (h.mouseHovered()) {
+            headers.splice(i, 1);
+            headers.push(h);
             dragging = h;
             break;
         }
