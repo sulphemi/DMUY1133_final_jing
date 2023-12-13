@@ -1,9 +1,12 @@
+let windowSpawnX = 0;
+let windowSpawnY = 0;
+
 class HeaderBar {
     constructor(content) {
         this.content = content;
         this.width = content.width;
         this.height = 20;
-        this.pos = createVector(20, 20);
+        this.pos = createVector(windowSpawnX += 20, windowSpawnY += 30);
     }
 
     mouseHovered() {
@@ -37,8 +40,38 @@ class HeaderBar {
 
 class FileExplorer {
     constructor() {
-        this.width;
-        this.height;
+        this.content = {};
+        this.content.width = 720;
+        this.content.height = 512;
+        this.pos = createVector(20, 20);
+    }
+
+    mouseHovered() {
+        return (mouseX > this.pos.x) && (mouseX < this.pos.x + this.width) && (mouseY > this.pos.y) && (mouseY < this.pos.y + this.height);
+    }
+
+    closeHovered() {
+        return (mouseX > this.pos.x) && (mouseX < this.pos.x + 20) && (mouseY > this.pos.y) && (mouseY < this.pos.y + 20);
+    }
+
+    mouseOnContent() {
+        return (mouseX > this.pos.x) && (mouseX < this.pos.x + this.width) && (mouseY > this.pos.y) && (mouseY < this.pos.y + this.height + this.content.height);
+    }
+
+    display() {
+        fill(headerColor);
+        rect(this.pos.x, this.pos.y, this.width, this.height);
+        this.drawContent();
+        this.drawCloseButton();
+    }
+
+    drawCloseButton() {
+        fill(this.closeHovered ? color(255, 0, 0) : color(255, 50, 50));
+        square(this.pos.x, this.pos.y, 20);
+    }
+
+    drawContent() {
+        rect(this.pos.x, this.pos.y, this.content.width, this.content.height);
     }
 }
 
@@ -50,7 +83,7 @@ class Folder {
     }
 }
 
-let loadLimit = 3;
+let loadLimit = 6;
 
 let dragging = null;
 let headerColor;
@@ -61,17 +94,13 @@ let fileTree = new Folder("root");
 
 function preload() {
     createFileTree();
-    img = loadImage("mimi.png");
+    //img = loadImage("mimi.png");
 }
 
 function setup() {
     createCanvas(800, 800);
-    for (f of fileTree.cont) {
-        if (typeof f.pixels !== "undefined") {
-            headers.push(new HeaderBar(f));
-        }
-    }
-    headers.push(new HeaderBar(img));
+    openAllImages(fileTree);
+    //headers.push(new HeaderBar(img));
     headerColor = color(0, 0, 255);
     noStroke();
 }
@@ -156,5 +185,14 @@ function populateFiles(folder, iw, fw) {
         const newFolder = new Folder();
         folder.push(newFolder);
         populateFiles(newFolder.cont, iw, fw);
+    }
+}
+
+function openAllImages(folder) {
+    for (const f of folder.cont) {
+        if (f.type ?? "none" === "folder") openAllImages(f);
+        if (typeof f.pixels !== "undefined") {
+            headers.push(new HeaderBar(f));
+        }
     }
 }
