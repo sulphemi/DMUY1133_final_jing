@@ -1,5 +1,6 @@
 let myInput;
 let myButton;
+let RNG;
 
 function setup() {
     createCanvas(800, 600);
@@ -44,4 +45,49 @@ function connectToIP() {
     } else {
         alert("not a valid ip!\nas a reminder, valid ip addresses follow the format x.x.x.x\nwhere x denotes a number in 0..255");
     }
+}
+
+// random number generator
+
+class LCG {
+    constructor(seed) {
+      // setting constants for the LCG algorithm
+      this.a = 1664525;
+      this.c = 1013904223;
+      this.m = Math.pow(2, 32);
+      this.seed = seed % this.m;
+      this.current = this.seed;
+    }
+
+    advance() {
+        this.current = (this.a * this.current + this.c) % this.m;
+    }
+  
+    // give random float
+    next() {
+      this.advance();
+      return this.current / this.m;
+    }
+  
+    // give random int between constraints, [min, max)
+    nextInt(min, max) {
+      return Math.floor(this.next() * (max - min)) + min;
+    }
+}
+
+//so apparently i dont have to worry about silly things like integer overflow cuz JS is *cough cough* such a good language, so why not
+//as long as the string is comprised of digits and periods this is guaranteed to be unique
+//max sane output, 255025502550255, is less than Number.MAX_SAFE_INTEGER
+function serializeString(string) {
+    let n = 0;
+    for (const x of string.split(".")) {
+        n *= 10000;
+        n += +x; 
+    }
+
+    return n;
+}
+
+function rngFromString(string) {
+    return new LCG(serializeString(string));
 }
