@@ -1,8 +1,21 @@
 class Folder {
-    constructor(name) {
+    constructor(name, theme) {
         this.type = "folder";
+        this.theme = theme;
         this.name = name;
         this.cont = [];
+    }
+
+    populate() {
+        if (theme === null) {
+            //no theme, populate with 
+        } else {
+
+        }
+    }
+
+    themedPopulate() {
+
     }
 }
 
