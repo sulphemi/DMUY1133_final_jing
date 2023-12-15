@@ -9,6 +9,7 @@ function setup() {
     myInput.position(300, 300);
     myInput.size(200, 20);
     myInput.style("font-family: monospace");
+    myInput.attribute("placeholder", "enter ip here...");
 
     myButton = createButton("connect");
     myButton.position(325, 350);
