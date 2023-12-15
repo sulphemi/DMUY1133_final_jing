@@ -57,6 +57,8 @@ class LCG {
       this.m = Math.pow(2, 32);
       this.seed = seed % this.m;
       this.current = this.seed;
+
+      this.advance();
     }
 
     advance() {
@@ -75,19 +77,11 @@ class LCG {
     }
 }
 
-//so apparently i dont have to worry about silly things like integer overflow cuz JS is *cough cough* such a good language, so why not
-//as long as the string is comprised of digits and periods this is guaranteed to be unique
-//max sane output, 255025502550255, is less than Number.MAX_SAFE_INTEGER
-function serializeString(string) {
-    let n = 0;
-    for (const x of string.split(".")) {
-        n *= 10000;
-        n += +x; 
-    }
-
-    return n;
+function ipToDecimal(addr) {
+    const octets = addr.split(".");
+    return (+octets[0] << 24) | (+octets[1] << 16) | (+octets[2] << 8) | +octets[3];
 }
 
 function rngFromString(string) {
-    return new LCG(serializeString(string));
+    return new LCG(ipToDecimal(string));
 }
