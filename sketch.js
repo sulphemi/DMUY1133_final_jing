@@ -35,6 +35,36 @@ class TextFile {
     }
 }
 
+function randomHexString(length) {
+    const characters = "0123456789abcdef";
+    const resultArray = new Array(length);
+  
+    for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        resultArray[i] = characters.charAt(randomIndex);
+    }
+  
+    return resultArray.join('');
+}
+
+function randInt(min, max) {
+    return Math.floor(min + (max - min) * Math.random());
+}
+
+class BinaryFile {
+    constructor(name) {
+        this.type = "binary";
+        this.name = name;
+        this.cont = null;
+        this.length = randInt(16, 1024);
+    }
+
+    populate() {
+        this.cont = randomHexString(this.length);
+    }
+    
+}
+
 function createFileTree() {
     const imageWeight = random();
     const folderWeight = random();
