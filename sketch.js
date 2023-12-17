@@ -54,6 +54,10 @@ class ImageFile {
         this.name = name;
         this.cont = null;
     }
+
+    populate() {
+        this.cont = getLoremImage();
+    }
 }
 
 class TextFile {
@@ -90,25 +94,44 @@ class BinaryFile {
     
 }
 
+let imageWeight;
+let folderWeight;
+let imgWeight;
+let fldWeight;
+
+let fileTree = new Folder("root");
+
+//only call this function after setting up RiTa seed and LCG seed
 function createFileTree() {
-    const imageWeight = RNG.next();
-    const folderWeight = RNG.next();
-    
-    let ct = 10;
+    txtWeight = RNG.next();
+    binWeight = RNG.next();
+    imgWeight = RNG.next();
+    fldWeight = RNG.next();
+
+    let ct = RNG.nextInt(5, 25);
     while (ct --> 0) {
-        populateFiles(fileTree.cont, imageWeight, folderWeight);
+        populateFiles(fileTree.cont);
     }
 }
 
-function populateFiles(folder, iw, fw) {
-    if (RNG.next() < iw) {
-        folder.push(getLoremImage());
+//populates the given array
+function populateFiles(folder) {
+    if (RNG.next() < txtWeight) {
+        folder.push(new TextFile(randomName()));
     }
 
-    if (RNG.next() < fw) {
-        const newFolder = new Folder();
+    if (RNG.next() < binWeight) {
+        folder.push(new BinaryFile(randomName));
+    }
+
+    if (RNG.next() < imageWeight) {
+        folder.push(new ImageFile(randomName()));
+    }
+
+    if (RNG.next() < fldWeight) {
+        const newFolder = new Folder(randomName());
         folder.push(newFolder);
-        populateFiles(newFolder.cont, iw, fw);
+        populateFiles(newFolder.cont);
     }
 }
 
@@ -154,6 +177,7 @@ function validateIP(ip) {
 function connectToIP() {
     const addr = myInput.value();
     if (validateIP(addr)) {
+        RiTa.randomSeed(RNG.seed);
         removeElements();
         alert(`ip accepted. now connecting to ${addr}...`);
     } else {
@@ -168,4 +192,8 @@ function ipToDecimal(addr) {
 
 function rngFromString(string) {
     return new LCG(ipToDecimal(string));
+}
+
+function randomName() {
+    return RiTa.randomWord({pos: "nns"});
 }
