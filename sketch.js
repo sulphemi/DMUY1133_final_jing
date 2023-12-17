@@ -19,6 +19,7 @@ class LCG {
     // give random float
     next() {
       this.advance();
+      //console.log(this.current / this.m);
       return this.current / this.m;
     }
   
@@ -33,18 +34,6 @@ class Folder {
         this.type = "folder";
         this.name = name;
         this.cont = [];
-    }
-
-    populate() {
-        if (theme === null) {
-            //no theme, populate with 
-        } else {
-
-        }
-    }
-
-    themedPopulate() {
-
     }
 }
 
@@ -85,13 +74,14 @@ class BinaryFile {
         this.type = "binary";
         this.name = name;
         this.cont = null;
-        this.length = RNG.nextInt(16, 1024);
+        this.length = RNG.nextInt(16, 256);
+
+        this.populate();
     }
 
     populate() {
         this.cont = randomHexString(this.length);
     }
-    
 }
 
 let imageWeight;
@@ -105,25 +95,25 @@ let fileTree = new Folder("root");
 
 //only call this function after setting up RiTa seed and LCG seed
 function createFileTree() {
-    txtWeight = RNG.next() / 2 + 0.3;
-    binWeight = RNG.next() / 2 + 0.3;
-    imgWeight = RNG.next() / 2 + 0.3;
-    fldWeight = RNG.next() / 3 + 0.2;
+    txtWeight = RNG.next() / 3 + 0.3;
+    binWeight = RNG.next() / 3 + 0.3;
+    imgWeight = RNG.next() / 3 + 0.3;
+    fldWeight = RNG.next() + 0.5; //might be over 1 but decreases based on how many nested folders
 
     let ct = RNG.nextInt(3, 10);
     while (ct --> 0) {
-        populateFiles(fileTree.cont);
+        populateFiles(fileTree.cont, 1);
     }
 }
 
 //populates the given array
-function populateFiles(folder) {
+function populateFiles(folder, folderDepth) {
     if (RNG.next() < txtWeight) {
         folder.push(new TextFile(randomName()));
     }
 
     if (RNG.next() < binWeight) {
-        folder.push(new BinaryFile(randomName));
+        folder.push(new BinaryFile(randomName()));
     }
 
     if (RNG.next() < imageWeight) {
@@ -132,13 +122,13 @@ function populateFiles(folder) {
         }
     }
 
-    if (RNG.next() < fldWeight) {
+    if (RNG.next() < fldWeight / folderDepth) {
         const newFolder = new Folder(randomName());
         folder.push(newFolder);
         
-        let ct = RNG.nextInt(3, 10);
+        let ct = RNG.nextInt(0, 8);
         while (ct --> 0) {
-            populateFiles(newFolder.cont);
+            populateFiles(newFolder.cont, folderDepth + 1);
         }
     }
 }
@@ -186,7 +176,7 @@ function connectToIP() {
     const addr = myInput.value();
     if (validateIP(addr)) {
         RNG = new LCG(ipToDecimal(addr));
-        RiTa.randomSeed(RNG.seed);
+        RiTa.randomSeed(ipToDecimal(addr));
         removeElements();
 
         //start
