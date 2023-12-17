@@ -108,7 +108,7 @@ function createFileTree() {
     imgWeight = RNG.next();
     fldWeight = RNG.next();
 
-    let ct = RNG.nextInt(5, 25);
+    let ct = RNG.nextInt(3, 10);
     while (ct --> 0) {
         populateFiles(fileTree.cont);
     }
