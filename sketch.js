@@ -13,6 +13,7 @@ class LCG {
 
     advance() {
         this.current = (this.a * this.current + this.c) % this.m;
+        this.current = Math.abs(this.current);
     }
   
     // give random float
@@ -28,9 +29,8 @@ class LCG {
 }
 
 class Folder {
-    constructor(name, theme) {
+    constructor(name) {
         this.type = "folder";
-        this.theme = theme;
         this.name = name;
         this.cont = [];
     }
@@ -99,14 +99,16 @@ let folderWeight;
 let imgWeight;
 let fldWeight;
 
+let imageLimit = 6;
+
 let fileTree = new Folder("root");
 
 //only call this function after setting up RiTa seed and LCG seed
 function createFileTree() {
-    txtWeight = RNG.next();
-    binWeight = RNG.next();
-    imgWeight = RNG.next();
-    fldWeight = RNG.next();
+    txtWeight = RNG.next() / 2 + 0.3;
+    binWeight = RNG.next() / 2 + 0.3;
+    imgWeight = RNG.next() / 2 + 0.3;
+    fldWeight = RNG.next() / 3 + 0.2;
 
     let ct = RNG.nextInt(3, 10);
     while (ct --> 0) {
@@ -125,19 +127,25 @@ function populateFiles(folder) {
     }
 
     if (RNG.next() < imageWeight) {
-        folder.push(new ImageFile(randomName()));
+        if (imageLimit --> 0) {
+            folder.push(new ImageFile(randomName()));
+        }
     }
 
     if (RNG.next() < fldWeight) {
         const newFolder = new Folder(randomName());
         folder.push(newFolder);
-        populateFiles(newFolder.cont);
+        
+        let ct = RNG.nextInt(3, 10);
+        while (ct --> 0) {
+            populateFiles(newFolder.cont);
+        }
     }
 }
 
 let myInput;
 let myButton;
-let RNG = new LCG(69420);
+let RNG;
 
 function setup() {
     createCanvas(800, 600);
@@ -177,8 +185,12 @@ function validateIP(ip) {
 function connectToIP() {
     const addr = myInput.value();
     if (validateIP(addr)) {
+        RNG = new LCG(ipToDecimal(addr));
         RiTa.randomSeed(RNG.seed);
         removeElements();
+
+        //start
+        createFileTree();
         alert(`ip accepted. now connecting to ${addr}...`);
     } else {
         alert("not a valid ip!\nas a reminder, valid ip addresses follow the format x.x.x.x\nwhere x denotes a number in 0..255");
@@ -188,10 +200,6 @@ function connectToIP() {
 function ipToDecimal(addr) {
     const octets = addr.split(".");
     return (+octets[0] << 24) | (+octets[1] << 16) | (+octets[2] << 8) | +octets[3];
-}
-
-function rngFromString(string) {
-    return new LCG(ipToDecimal(string));
 }
 
 function randomName() {
