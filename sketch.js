@@ -282,7 +282,7 @@ class FileExplorer {
     }
 
     display() {
-        fill("#ffffff");
+        fill(255);
         rect(this.pos.x, this.pos.y, this.width, this.height);
         this.drawContent();
     }
@@ -290,14 +290,20 @@ class FileExplorer {
     drawContent() {
         rect(this.pos.x, this.pos.y, this.width, this.height);
         for (f of this.folder.cont) {
-            rect(f.de_x + this.pos.x, f.de_y + this.pos.y, 30, 50);
-            text(f.name, f.de_x + this.pos.x, f.de_y + this.pos.y);
+            drawFile(f, f.de_x + this.pos.x, f.de_y + this.pos.y);
         }
     }
 }
 
 function openFolder(folder) {
     headers.push(new HeaderBar(new FileExplorer(folder)));
+}
+
+function drawFile(file, x, y) {
+    fill(255);
+    rect(x, y, 50, 70); //should be an icon
+    fill(0);
+    text(file.name, x, y + 80);
 }
 
 let dragging = null;
@@ -308,8 +314,7 @@ function drawDE() {
     background(240);
 
     for (f of fileTree.cont) {
-        rect(f.de_x, f.de_y, 30, 50);
-        text(f.name, f.de_x, f.de_y);
+        drawFile(f, f.de_x, f.de_y);
     }
 
     for (h of headers) {
