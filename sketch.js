@@ -289,9 +289,19 @@ class FileExplorer {
 
     drawContent() {
         rect(this.pos.x, this.pos.y, this.width, this.height);
-        for (f of this.folder.cont) {
+        for (const f of this.folder.cont) {
             drawFile(f, f.de_x + this.pos.x, f.de_y + this.pos.y);
         }
+    }
+
+    getHoveredFile() {
+        let selectedFile = null;
+        for (const f of this.folder.cont) {
+            if ((mouseX > f.de_x + this.pos.x) && (mouseX < f.de_x + 50 + this.pos.x) && (mouseY > f.de_y + this.pos.y) && (mouseY < f.de_y + 70 + this.pos.y)) {
+                selectedFile = f;
+            }
+        }
+        return selectedFile;
     }
 }
 
@@ -300,12 +310,13 @@ function openFolder(folder) {
 }
 
 function drawFile(file, x, y) {
-    fill(255);
+    fill(file === hoveredFile ? 230 : 255);
     rect(x, y, 50, 70); //should be an icon
     fill(0);
     text(file.name, x, y + 80);
 }
 
+let hoveredFile = null;
 let dragging = null;
 let headerColor;
 let headers = [];
@@ -313,12 +324,36 @@ let headers = [];
 function drawDE() {
     background(240);
 
-    for (f of fileTree.cont) {
+    for (const f of fileTree.cont) {
         drawFile(f, f.de_x, f.de_y);
     }
 
-    for (h of headers) {
+    for (const h of headers) {
         h.display();
+    }
+
+    hoveredFile = determineHoveredFile();
+}
+
+function determineHoveredFile() {
+    let currentHoveredWindow = null;
+    for (let i = headers.length - 1; i >= 0; i--) {
+        if (headers[i].mouseOnContent()) {
+            currentHoveredWindow = headers[i];
+            break;
+        }
+    }
+
+    let selectedFile = null;
+    if (currentHoveredWindow) {
+        return currentHoveredWindow.content.getHoveredFile ? currentHoveredWindow.content.getHoveredFile() : null;
+    } else {
+        for (const f of fileTree.cont) {
+            if ((mouseX > f.de_x) && (mouseX < f.de_x + 50) && (mouseY > f.de_y) && (mouseY < f.de_y + 70)) {
+                selectedFile = f;
+            }
+        }
+        return selectedFile;
     }
 }
 
