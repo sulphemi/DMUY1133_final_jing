@@ -239,6 +239,7 @@ class HeaderBar {
         this.width = content.width;
         this.height = 20;
         this.pos = createVector(windowSpawnX += 20, windowSpawnY += 30);
+        this.content.pos = this.pos;
     }
 
     mouseHovered() {
@@ -254,57 +255,49 @@ class HeaderBar {
     }
 
     display() {
+        this.drawContent();
         fill(headerColor);
         rect(this.pos.x, this.pos.y, this.width, this.height);
-        this.drawContent();
         this.drawCloseButton();
     }
 
     drawCloseButton() {
-        fill(this.closeHovered ? color(255, 0, 0) : color(255, 50, 50));
+        fill(this.closeHovered() ? color(255, 0, 0) : color(255, 50, 50));
         square(this.pos.x, this.pos.y, 20);
     }
 
     drawContent() {
-        image(this.content, h.pos.x, h.pos.y + h.height, this.content.width, this.content.height);
+        this.content.display();
+        //image(this.content, h.pos.x, h.pos.y + h.height, this.content.width, this.content.height);
     }
 }
 
 class FileExplorer {
-    constructor() {
-        this.content = {};
-        this.content.width = 720;
-        this.content.height = 512;
-        this.pos = createVector(20, 20);
-    }
-
-    mouseHovered() {
-        return (mouseX > this.pos.x) && (mouseX < this.pos.x + this.width) && (mouseY > this.pos.y) && (mouseY < this.pos.y + this.height);
-    }
-
-    closeHovered() {
-        return (mouseX > this.pos.x) && (mouseX < this.pos.x + 20) && (mouseY > this.pos.y) && (mouseY < this.pos.y + 20);
-    }
-
-    mouseOnContent() {
-        return (mouseX > this.pos.x) && (mouseX < this.pos.x + this.width) && (mouseY > this.pos.y) && (mouseY < this.pos.y + this.height + this.content.height);
+    constructor(folder) {
+        this.width = 720;
+        this.height = 512;
+        this.pos = null;
+        
+        this.folder = folder;
     }
 
     display() {
-        fill(headerColor);
+        fill("#ffffff");
         rect(this.pos.x, this.pos.y, this.width, this.height);
         this.drawContent();
-        this.drawCloseButton();
-    }
-
-    drawCloseButton() {
-        fill(this.closeHovered ? color(255, 0, 0) : color(255, 50, 50));
-        square(this.pos.x, this.pos.y, 20);
     }
 
     drawContent() {
-        rect(this.pos.x, this.pos.y, this.content.width, this.content.height);
+        rect(this.pos.x, this.pos.y, this.width, this.height);
+        for (f of this.folder.cont) {
+            rect(f.de_x + this.pos.x, f.de_y + this.pos.y, 30, 50);
+            text(f.name, f.de_x + this.pos.x, f.de_y + this.pos.y);
+        }
     }
+}
+
+function openFolder(folder) {
+    headers.push(new HeaderBar(new FileExplorer(folder)));
 }
 
 let dragging = null;
