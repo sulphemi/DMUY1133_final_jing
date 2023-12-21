@@ -152,6 +152,7 @@ function populateFiles(folder, folderDepth) {
 
 let myInput;
 let myButton;
+let myP;
 //let loadingScreen;
 let RNG;
 
@@ -160,13 +161,13 @@ function setup() {
     background(50);
 
     myInput = createInput();
-    myInput.position(300, 300);
+    myInput.position(300, 200);
     myInput.size(200, 20);
     myInput.style("font-family: monospace");
-    myInput.attribute("placeholder", "enter ip here...");
+    myInput.attribute("placeholder", "enter ip here");
 
     myButton = createButton("connect");
-    myButton.position(325, 350);
+    myButton.position(325, 250);
     myButton.size(150, 20);
     myButton.style("font-family: monospace");
     myButton.style("background-color: #404040");
@@ -175,6 +176,17 @@ function setup() {
     myButton.attribute("onmouseover", "this.style.backgroundColor='#303030'");
     myButton.attribute("onmouseout", "this.style.backgroundColor='#404040'");
     myButton.mousePressed(connectToIP);
+
+    myP = createP("establishing connection...");
+    myP.position(200, 400);
+    myP.id("meow");
+    myP.style("font-family: monospace");
+    myP.style("color: #ffffff");
+    myP.attribute("hidden", "meowmeowmeowmeow");
+}
+
+function unhideP() {
+    document.getElementById("meow").removeAttribute("hidden");
 }
 
 function validateIP(ip) {
@@ -193,15 +205,16 @@ function validateIP(ip) {
 function connectToIP() {
     const addr = myInput.value();
     if (validateIP(addr)) {
+        unhideP();
         RNG = new LCG(ipToDecimal(addr));
         RiTa.randomSeed(ipToDecimal(addr));
         prepMarkov();
-        removeElements();
 
         //start
         createFileTree();
-        alert(`ip accepted. now connecting to ${addr}...`);
+        alert(`[${addr}] connection established.`);
 
+        removeElements();
         startDE();
         //makeLoadingScreen();
     } else {
@@ -371,7 +384,7 @@ class TextDisplay {
         rect(this.pos.x, this.pos.y, this.width, this.height);
         textAlign(LEFT);
         fill(textColor);
-        text(this.file.cont, this.pos.x + 10, this.pos.y + 30, this.width - 20, this.height - 50);
+        text(this.file.cont, this.pos.x + 10, this.pos.y + 40, this.width - 20, this.height - 50);
     }
 }
 
