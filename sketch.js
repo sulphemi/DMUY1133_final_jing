@@ -99,7 +99,7 @@ let fldWeight;
 
 let imageLimit = 6;
 
-let fileTree = new Folder("root");
+let fileTree = null;
 
 //only call this function after setting up RiTa seed and LCG seed
 function createFileTree() {
@@ -107,6 +107,8 @@ function createFileTree() {
     binWeight = RNG.next() / 3 + 0.3;
     imgWeight = RNG.next() / 3 + 0.3;
     fldWeight = RNG.next() + 0.5; //might be over 1 but decreases based on how many nested folders
+
+    fileTree = new Folder("root");
 
     let ct = RNG.nextInt(3, 10);
     while (ct --> 0) {
