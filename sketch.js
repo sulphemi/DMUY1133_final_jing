@@ -264,6 +264,9 @@ class HeaderBar {
         fill(headerColor);
         rect(this.pos.x, this.pos.y, this.width, this.height);
         this.drawCloseButton();
+        fill(255);
+        textAlign(LEFT);
+        text(this.content.file.name, this.pos.x + 25, this.pos.y + 15);
     }
 
     drawCloseButton() {
@@ -283,7 +286,7 @@ class FileExplorer {
         this.height = 512;
         this.pos = null;
         
-        this.folder = folder;
+        this.file = folder;
     }
 
     display() {
@@ -294,14 +297,19 @@ class FileExplorer {
 
     drawContent() {
         rect(this.pos.x, this.pos.y, this.width, this.height);
-        for (const f of this.folder.cont) {
+        for (const f of this.file.cont) {
             drawFile(f, f.de_x + this.pos.x, f.de_y + this.pos.y);
+        }
+        if (this.file.cont.length === 0) {
+            fill(40);
+            textAlign(CENTER);
+            text("this folder is empty.", this.pos.x + this.width / 2, this.pos.y + this.height / 2);
         }
     }
 
     getHoveredFile() {
         let selectedFile = null;
-        for (const f of this.folder.cont) {
+        for (const f of this.file.cont) {
             if ((mouseX > f.de_x + this.pos.x) && (mouseX < f.de_x + 50 + this.pos.x) && (mouseY > f.de_y + this.pos.y) && (mouseY < f.de_y + 70 + this.pos.y)) {
                 selectedFile = f;
             }
@@ -327,6 +335,7 @@ class TextDisplay {
 
     drawContent() {
         rect(this.pos.x, this.pos.y, this.width, this.height);
+        textAlign(LEFT);
         fill(0);
         text(this.file.cont, this.pos.x + 10, this.pos.y + 30, this.width - 20, this.height - 50);
     }
@@ -350,7 +359,8 @@ function drawFile(file, x, y) {
     fill(file === hoveredFile ? 230 : 255);
     rect(x, y, 50, 70); //should be an icon
     fill(0);
-    text(file.name, x, y + 80);
+    textAlign(CENTER);
+    text(file.name, x + 25, y + 80);
 }
 
 let hoveredFile = null;
