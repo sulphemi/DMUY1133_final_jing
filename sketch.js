@@ -1,3 +1,32 @@
+// random number generator
+class LCG {
+    constructor(seed) {
+      // setting constants for the LCG algorithm
+      this.a = 1664525;
+      this.c = 1013904223;
+      this.m = Math.pow(2, 32);
+      this.seed = seed % this.m;
+      this.current = this.seed;
+
+      this.advance();
+    }
+
+    advance() {
+        this.current = (this.a * this.current + this.c) % this.m;
+    }
+  
+    // give random float
+    next() {
+      this.advance();
+      return this.current / this.m;
+    }
+  
+    // give random int between constraints, [min, max)
+    nextInt(min, max) {
+      return Math.floor(this.next() * (max - min)) + min;
+    }
+}
+
 class Folder {
     constructor(name, theme) {
         this.type = "folder";
@@ -40,15 +69,11 @@ function randomHexString(length) {
     const resultArray = new Array(length);
   
     for (let i = 0; i < length; i++) {
-        const randomIndex = Math.floor(Math.random() * characters.length);
+        const randomIndex = RNG.nextInt(0, characters.length);
         resultArray[i] = characters.charAt(randomIndex);
     }
   
     return resultArray.join('');
-}
-
-function randInt(min, max) {
-    return Math.floor(min + (max - min) * Math.random());
 }
 
 class BinaryFile {
@@ -56,7 +81,7 @@ class BinaryFile {
         this.type = "binary";
         this.name = name;
         this.cont = null;
-        this.length = randInt(16, 1024);
+        this.length = RNG.nextInt(16, 1024);
     }
 
     populate() {
@@ -66,8 +91,8 @@ class BinaryFile {
 }
 
 function createFileTree() {
-    const imageWeight = random();
-    const folderWeight = random();
+    const imageWeight = RNG.next();
+    const folderWeight = RNG.next();
     
     let ct = 10;
     while (ct --> 0) {
@@ -76,11 +101,11 @@ function createFileTree() {
 }
 
 function populateFiles(folder, iw, fw) {
-    if (random() < iw) {
+    if (RNG.next() < iw) {
         folder.push(getLoremImage());
     }
 
-    if (random() < fw) {
+    if (RNG.next() < fw) {
         const newFolder = new Folder();
         folder.push(newFolder);
         populateFiles(newFolder.cont, iw, fw);
@@ -89,7 +114,7 @@ function populateFiles(folder, iw, fw) {
 
 let myInput;
 let myButton;
-let RNG;
+let RNG = new LCG(69420);
 
 function setup() {
     createCanvas(800, 600);
@@ -133,36 +158,6 @@ function connectToIP() {
         alert(`ip accepted. now connecting to ${addr}...`);
     } else {
         alert("not a valid ip!\nas a reminder, valid ip addresses follow the format x.x.x.x\nwhere x denotes a number in 0..255");
-    }
-}
-
-// random number generator
-
-class LCG {
-    constructor(seed) {
-      // setting constants for the LCG algorithm
-      this.a = 1664525;
-      this.c = 1013904223;
-      this.m = Math.pow(2, 32);
-      this.seed = seed % this.m;
-      this.current = this.seed;
-
-      this.advance();
-    }
-
-    advance() {
-        this.current = (this.a * this.current + this.c) % this.m;
-    }
-  
-    // give random float
-    next() {
-      this.advance();
-      return this.current / this.m;
-    }
-  
-    // give random int between constraints, [min, max)
-    nextInt(min, max) {
-      return Math.floor(this.next() * (max - min)) + min;
     }
 }
 
