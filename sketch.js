@@ -364,10 +364,24 @@ function openFile(file) {
 
 function drawFile(file, x, y) {
     fill(file === hoveredFile ? 230 : 255);
-    rect(x, y, 50, 70); //should be an icon
-    fill(textColor);
+    rect(x, y, 50, 70);
     textAlign(CENTER);
+    drawIcon(file.type, x, y);
+    fill(textColor);
     text(file.name, x + 25, y + 80);
+}
+
+function drawIcon(type, x, y) {
+    fill(textColor);
+    text(type, x + 25, y + 35);
+
+    if (type === "binary") {
+
+    } else if (type === "image") {
+
+    } else if (type === "text") {
+        
+    }
 }
 
 let hoveredFile = null;
