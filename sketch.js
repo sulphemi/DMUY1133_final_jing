@@ -227,6 +227,15 @@ function makeLoadingScreen() {
 
 ///////////
 
+let fonts;
+function preload() {
+    fonts = [loadFont("AkzidenzGroteskBQ-Reg.otf"), loadFont("Figtree-Regular.ttf"), loadFont("PublicSans-Regular.otf"), loadFont("Bitter-Regular.ttf"), loadFont("JetBrainsMono-Regular.ttf"), loadFont("Sono-Regular.ttf"), loadFont("Courier New.ttf"), loadFont("Monaco.ttf"), loadFont("Ubuntu-R.ttf")];
+}
+
+function getFontScheme() {
+    textFont(fonts[RNG.nextInt(0, fonts.length)]);
+}
+
 function getColorScheme() {
     headerColor = color(RNG.nextInt(0, 255), RNG.nextInt(0, 255), RNG.nextInt(0, 255));
     backgroundColor = color(RNG.nextInt(200, 255), RNG.nextInt(200, 255), RNG.nextInt(200, 255));
@@ -236,6 +245,7 @@ function getColorScheme() {
 
 function startDE() {
     getColorScheme();
+    getFontScheme();
     textWrap(CHAR);
 
     draw = drawDE;
