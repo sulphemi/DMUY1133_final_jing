@@ -34,6 +34,8 @@ class Folder {
         this.type = "folder";
         this.name = name;
         this.cont = [];
+        this.de_x = RNG.nextInt(0, 400);
+        this.de_y = RNG.nextInt(0, 400);
     }
 }
 
@@ -78,7 +80,7 @@ class BinaryFile {
         this.type = "binary";
         this.name = name;
         this.cont = null;
-        this.length = RNG.nextInt(16, 256);
+        this.length = RNG.nextInt(16, 1024);
         this.de_x = RNG.nextInt(0, 400);
         this.de_y = RNG.nextInt(0, 400);
 
