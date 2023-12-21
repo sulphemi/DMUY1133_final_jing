@@ -227,8 +227,15 @@ function makeLoadingScreen() {
 
 ///////////
 
+function getColorScheme() {
+    headerColor = color(RNG.nextInt(0, 255), RNG.nextInt(0, 255), RNG.nextInt(0, 255));
+    backgroundColor = color(RNG.nextInt(200, 255), RNG.nextInt(200, 255), RNG.nextInt(200, 255));
+    uiColor = color(RNG.nextInt(230, 255), RNG.nextInt(230, 255), RNG.nextInt(230, 255));
+    textColor = color(RNG.nextInt(0, 40), RNG.nextInt(0, 40), RNG.nextInt(0, 40))
+}
+
 function startDE() {
-    headerColor = color(0, 0, 255);
+    getColorScheme();
     textWrap(CHAR);
 
     draw = drawDE;
@@ -264,7 +271,7 @@ class HeaderBar {
         fill(headerColor);
         rect(this.pos.x, this.pos.y, this.width, this.height);
         this.drawCloseButton();
-        fill(255);
+        fill(uiColor);
         textAlign(LEFT);
         text(this.content.file.name, this.pos.x + 25, this.pos.y + 15);
     }
@@ -290,7 +297,7 @@ class FileExplorer {
     }
 
     display() {
-        fill(255);
+        fill(uiColor);
         rect(this.pos.x, this.pos.y, this.width, this.height);
         this.drawContent();
     }
@@ -328,7 +335,7 @@ class TextDisplay {
     }
 
     display() {
-        fill(255);
+        fill(uiColor);
         rect(this.pos.x, this.pos.y, this.width, this.height);
         this.drawContent();
     }
@@ -336,7 +343,7 @@ class TextDisplay {
     drawContent() {
         rect(this.pos.x, this.pos.y, this.width, this.height);
         textAlign(LEFT);
-        fill(0);
+        fill(textColor);
         text(this.file.cont, this.pos.x + 10, this.pos.y + 30, this.width - 20, this.height - 50);
     }
 }
@@ -358,18 +365,18 @@ function openFile(file) {
 function drawFile(file, x, y) {
     fill(file === hoveredFile ? 230 : 255);
     rect(x, y, 50, 70); //should be an icon
-    fill(0);
+    fill(textColor);
     textAlign(CENTER);
     text(file.name, x + 25, y + 80);
 }
 
 let hoveredFile = null;
 let dragging = null;
-let headerColor;
+let headerColor, backgroundColor, uiColor, textColor;
 let headers = [];
 
 function drawDE() {
-    background(240);
+    background(backgroundColor);
 
     for (const f of fileTree.cont) {
         drawFile(f, f.de_x, f.de_y);
