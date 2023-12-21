@@ -55,7 +55,7 @@ class TextFile {
     constructor(name) {
         this.type = "text";
         this.name = name;
-        this.cont = null;
+        this.cont = "null";
         this.de_x = RNG.nextInt(0, 400);
         this.de_y = RNG.nextInt(0, 400);
     }
@@ -225,6 +225,7 @@ function makeLoadingScreen() {
 
 function startDE() {
     headerColor = color(0, 0, 255);
+    textWrap(CHAR);
 
     draw = drawDE;
 }
@@ -305,8 +306,40 @@ class FileExplorer {
     }
 }
 
+class TextDisplay {
+    constructor(f) {
+        this.width = 400;
+        this.height = 500;
+        this.pos = null;
+        
+        this.file = f;
+    }
+
+    display() {
+        fill(255);
+        rect(this.pos.x, this.pos.y, this.width, this.height);
+        this.drawContent();
+    }
+
+    drawContent() {
+        rect(this.pos.x, this.pos.y, this.width, this.height);
+        fill(0);
+        text(this.file.cont, this.pos.x + 10, this.pos.y + 30, this.width - 20, this.height - 50);
+    }
+}
+
 function openFolder(folder) {
     headers.push(new HeaderBar(new FileExplorer(folder)));
+}
+
+function openFile(file) {
+    if (file.type === "folder") {
+        headers.push(new HeaderBar(new FileExplorer(file)));
+    } else if (file.type === "text") {
+        headers.push(new HeaderBar(new TextDisplay(file)));
+    } else if (file.type === "binary") {
+        headers.push(new HeaderBar(new TextDisplay(file)));
+    }
 }
 
 function drawFile(file, x, y) {
@@ -376,6 +409,11 @@ function getLoremImage(imgWidth, imgHeight, imgSubject) {
 }
 
 function mousePressed() {
+    if (hoveredFile) {
+        openFile(hoveredFile);
+        return;
+    }
+
     for (let i = headers.length - 1; i >= 0; i--) {
         const h = headers[i];
 
