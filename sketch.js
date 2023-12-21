@@ -135,6 +135,7 @@ function populateFiles(folder, folderDepth) {
 
 let myInput;
 let myButton;
+//let loadingScreen;
 let RNG;
 
 function setup() {
@@ -182,6 +183,7 @@ function connectToIP() {
         //start
         createFileTree();
         alert(`ip accepted. now connecting to ${addr}...`);
+        //makeLoadingScreen();
     } else {
         alert("not a valid ip!\nas a reminder, valid ip addresses follow the format x.x.x.x\nwhere x denotes a number in 0..255");
     }
@@ -194,4 +196,17 @@ function ipToDecimal(addr) {
 
 function randomName() {
     return RiTa.randomWord({pos: "nns"});
+}
+
+function makeLoadingScreen() {
+    let loadScreenCode = p => {
+        p.setup = () => {
+            let pcanvas = p.createCanvas(400, 400);
+            pcanvas.position(0, 0);
+        };
+        p.draw = () => {
+            p.background(255);
+        };
+    }
+    loadingScreen = new p5(loadScreenCode, "meow");
 }
