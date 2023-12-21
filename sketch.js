@@ -60,6 +60,12 @@ class TextFile {
         this.cont = "null";
         this.de_x = RNG.nextInt(0, 400);
         this.de_y = RNG.nextInt(0, 400);
+
+        this.populate();
+    }
+
+    populate() {
+        this.cont = mk.generate(RNG.nextInt(5, 20));
     }
 }
 
@@ -127,9 +133,10 @@ function populateFiles(folder, folderDepth) {
     }
 
     if (RNG.next() < imageWeight) {
-        if (imageLimit --> 0) {
-            folder.push(new ImageFile(randomName()));
-        }
+        //images are too hard (and slow)
+        // if (imageLimit --> 0) {
+        //     folder.push(new ImageFile(randomName()));
+        // }
     }
 
     if (RNG.next() < fldWeight / folderDepth) {
@@ -188,6 +195,7 @@ function connectToIP() {
     if (validateIP(addr)) {
         RNG = new LCG(ipToDecimal(addr));
         RiTa.randomSeed(ipToDecimal(addr));
+        prepMarkov();
         removeElements();
 
         //start
@@ -227,9 +235,18 @@ function makeLoadingScreen() {
 
 ///////////
 
-let fonts;
+let fonts, markov_data;
 function preload() {
     fonts = [loadFont("AkzidenzGroteskBQ-Reg.otf"), loadFont("Figtree-Regular.ttf"), loadFont("PublicSans-Regular.otf"), loadFont("Bitter-Regular.ttf"), loadFont("JetBrainsMono-Regular.ttf"), loadFont("Sono-Regular.ttf"), loadFont("Courier New.ttf"), loadFont("Monaco.ttf"), loadFont("Ubuntu-R.ttf")];
+    markov_data = [loadStrings("pg14998.txt"), loadStrings("pg2830.txt"), loadStrings("pg67564.txt"), loadStrings("pg71898.txt")];
+}
+
+let mk;
+function prepMarkov() {
+    mk = RiTa.markov(3);
+    for (const x of markov_data) {
+        mk.addText(x.join(" "));
+    }
 }
 
 function getFontScheme() {
