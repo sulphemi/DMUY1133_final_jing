@@ -270,7 +270,7 @@ class HeaderBar {
     }
 
     drawCloseButton() {
-        fill(this.closeHovered() ? color(255, 0, 0) : color(255, 50, 50));
+        fill(this.closeHovered() ? color(255, 100, 100) : color(255, 50, 50));
         square(this.pos.x, this.pos.y, 20);
     }
 
